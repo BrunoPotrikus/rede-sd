@@ -1,0 +1,21 @@
+# Usar uma imagem base oficial do Python
+FROM python:3.9
+
+# Instalar netcat
+# RUN apk add --no-cache netcat-openbsd busybox-extras
+
+# Copiar o script servidor.py para o diretório /usr/local/bin no contêiner
+COPY servidor.py /usr/local/bin/servidor.py
+
+COPY messenger_pb2.py /usr/local/bin/messenger_pb2.py
+COPY messenger_pb2_grpc.py /usr/local/bin/messenger_pb2_grpc.py
+
+# Definir permissões de execução para o script
+RUN chmod +x /usr/local/bin/servidor.py
+
+# Script de inicialização para configurar o roteamento
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Executar o script na inicialização do contêiner
+ENTRYPOINT ["/entrypoint.sh"]
