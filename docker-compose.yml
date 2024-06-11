@@ -9,7 +9,7 @@ services:
     privileged: true
     networks:
       rede_sd:
-        ipv4_address: 100.0.0.10  # Alterado para um IP diferente
+        ipv4_address: 100.0.0.10
   cliente1:
     build:
       context: .

@@ -14,3 +14,6 @@ docker network ls
 # docker network connect $REDE_SD <nome_do_conteiner>
 
 echo "Redes configuradas com sucesso."
+
+# Manter o container em execução
+exec "$@"
