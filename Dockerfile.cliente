@@ -30,6 +30,7 @@ COPY cliente.py /app/cliente.py
 # COPY messenger_pb2.py /app/messenger_pb2.py
 # COPY messenger_pb2_grpc.py /app/messenger_pb2_grpc.py
 
+# Copiar messenger.proto para o diretório /app no contêiner
 COPY messenger.proto /app/messenger.proto
 
 # Compila o arquivo .proto
