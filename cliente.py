@@ -53,7 +53,7 @@ def main():
         print(f"{client_name} conectado ao servidor!")
         
         # Define quem vai começar fazendo perguntas
-        is_questioner = input("Você vai fazer advinhar a palavra? (sim/não): ").strip().lower() == 'sim'
+        is_questioner = input("Você vai advinhar a palavra? (sim/não): ").strip().lower() == 'sim'
         
         message_event = threading.Event()
         question_event = threading.Event()
@@ -63,7 +63,7 @@ def main():
             print("Esperando o outro jogador escolher a categoria e o item...")
             message_event.wait()  # Espera até que o outro jogador escolha a categoria e o item
             
-            for _ in range(7):  # Permite até 5 perguntas
+            for _ in range(10):  # Permite até 10 perguntas
                 question = input("Faça sua pergunta (ou 'sair' para sair): ")
                 if question.lower() == 'sair':
                     break
