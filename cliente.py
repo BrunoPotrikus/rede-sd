@@ -45,7 +45,7 @@ def receive_messages(stub, client_name, is_questioner, message_event, question_e
             question_event.set()  # Sinaliza que a resposta foi recebida
 
 def main():
-    server_address = '100.0.0.1:50051'
+    server_address = '100.0.0.10:50051'
     client_name = input("Digite seu nome: ")
 
     connected, stub = connect(server_address, client_name)

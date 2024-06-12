@@ -1,22 +1,39 @@
 FROM ubuntu:latest
 
-# Instalar Python 3.9 a partir de um PPA
-RUN apt-get update && apt-get install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y python3.9
+# Instalar dependências do sistema, adicionar o PPA para Python 3.9 e instalar Python 3.9
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update && apt-get install -y \
+    python3.9 \
+    python3.9-venv \
+    python3.9-dev \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copiar scripts para o diretório /usr/local/bin no contêiner
-COPY cliente.py /usr/local/bin/cliente.py
-COPY messenger_pb2.py /usr/local/bin/messenger_pb2.py
-COPY messenger_pb2_grpc.py /usr/local/bin/messenger_pb2_grpc.py
+# Cria um diretório para a aplicação
+WORKDIR /app
 
-# Script de inicialização para configurar o roteamento
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Cria e ativa um ambiente virtual
+RUN python3.9 -m venv venv
+ENV PATH="/app/venv/bin:$PATH"
 
-# Executar o script na inicialização do contêiner
-ENTRYPOINT ["/entrypoint.sh"]
+# Copia os arquivos requirements.txt para o contêiner
+COPY requirements.txt .
 
-# Manter o container em execução
+# Instala as dependências Python no ambiente virtual
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar scripts para o diretório /app no contêiner
+COPY cliente.py /app/cliente.py
+# COPY messenger_pb2.py /app/messenger_pb2.py
+# COPY messenger_pb2_grpc.py /app/messenger_pb2_grpc.py
+
+COPY messenger.proto /app/messenger.proto
+
+# Compila o arquivo .proto
+RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. messenger.proto
+
+# Comando para manter o container em execução
 CMD ["tail", "-f", "/dev/null"]
